@@ -1,16 +1,21 @@
 import Mathlib.Analysis.Calculus.Deriv.Basic
+import Mathlib.Topology.Basic
+import Mathlib.Data.Real.Basic
 
 open Filter Topology
 
 /-!
-Keep a local project-level alias for `HasDerivAt` inside the `Local`
-namespace to avoid shadowing Mathlib's implementation while keeping the
-function available for experimentation and teaching.
+Project-local derivative predicate (kept separate from Mathlib's
+`HasDerivAt`). This is intended for teaching/experiments; keep it in a
+`Local` namespace to avoid name clashes with real mathlib exports.
 -/
 
 namespace Local
 
-abbrev HasDerivAt (f : ℝ → ℝ) (f' c : ℝ) : Prop :=
-  Mathlib.Analysis.Calculus.Deriv.Basic.HasDerivAt f f' c
+def HasDerivAt (f : ℝ → ℝ) (f' c : ℝ) : Prop :=
+  Tendsto
+    (fun h : ℝ => (f (c + h) - f c - f' * h) / |h|)
+    ((𝓝 (0 : ℝ) : Filter ℝ))
+    ((𝓝 (0 : ℝ) : Filter ℝ))
 
 end Local
